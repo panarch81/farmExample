@@ -10,46 +10,75 @@ import com.farm.domain.Farm;
 import com.farm.domain.Goat;
 import com.farm.people.FarmException;
 import com.farm.people.Farmer;
+import com.farm.utils.AnimalComparator;
+import com.farm.utils.Dictionary;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Init {
   public static void main(String[] args){
-    List<Animal> animals = new ArrayList<>();
-    Cow cowA = new Cow();
-    animals.add(cowA);
-    animals.add(new Chicken());
-    animals.add(new Goat());
-
+    List<Animal> animals = getAnimals();
     Farm farm = new Farm(
                         animals,
                         List.of(new Farmer())
                 );
+
     manageAnimals(farm);
     MilkService milkService = new MilkServiceImpl();
-    System.out.println("The farmer is: "+farm.getOwners().get(0).getName());
+
+    System.out.println("Milk price for the animal is:"+
+        getMilkPrice(milkService, args[0],Integer.valueOf(args[1])));
+    System.out.println("Please negotiate with the farmer who is: "+farm.getOwners().get(0).getName());
+    Map translatedAnimals = Dictionary.initializeDictionary();
+
+    Set animalsInSpanish = translatedAnimals.entrySet();
+    System.out.println(animalsInSpanish);
+
+  }
+
+  private static double getMilkPrice(MilkService milkService, String animalTypeName, int liter) {
     try {
-      double milkPriceByLiter = milkService.getMilkPriceByLiter(AnimalType.CHICKEN.name(), 2);
+      return milkService.getMilkPriceByLiter(animalTypeName, 2);
     }catch (FarmException e){
       System.out.println(e.getMessage());
     }finally {
       System.out.println("happy farm");
     }
+    return 0;
   }
 
-  private static void manageAnimals(Farm farm) {
+  private static List<Animal> getAnimals() {
     List<Animal> animals = new ArrayList<>();
     Cow cowA = new Cow();
     animals.add(cowA);
-    animals.add(new Chicken());
     animals.add(new Goat());
-    farm.setAnimals(animals);
+    animals.add(new Chicken());
+    return animals;
+  }
 
-    System.out.println("-----Animals in the farm:");
-    farm.getAnimals().stream().forEach(animal -> System.out.println(animal.getName()));
-    System.out.println("-----");
+  private static void manageAnimals(Farm farm) {
+    for(int i= 0; i< farm.getAnimals().size(); i++){
+      System.out.println(farm.getAnimals().get(i).getName());
+    }
+//using the Comparable implementation inside Animal using natural order
+    Collections.sort(farm.getAnimals());
+    System.out.println("------");
+    for(int i= 0; i< farm.getAnimals().size(); i++){
+      System.out.println(farm.getAnimals().get(i).getName());
+    }
+    System.out.println("------****** ----");
 
-    System.out.println("The Cow gives: "+farm.getProductTypeByAnimal(cowA));
+    //using the Comparator implementation in the AnimalComparator using reverse order
+    Collections.sort(farm.getAnimals(),new AnimalComparator());
+
+    for(int i= 0; i< farm.getAnimals().size(); i++){
+      System.out.println(farm.getAnimals().get(i).getName());
+    }
+    System.out.println("------*######### ----");
+    System.out.println("The Cow gives: "+farm.getProductTypeByAnimal(new Cow()));
   }
 
 }

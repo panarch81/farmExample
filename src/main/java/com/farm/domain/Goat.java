@@ -6,6 +6,6 @@ import lombok.Data;
 public class Goat extends Animal{
   @Override
   public String getName() {
-    return "Mountain Goat";
+    return "Goat";
   }
 }

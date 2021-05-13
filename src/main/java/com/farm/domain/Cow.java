@@ -11,7 +11,7 @@ public class Cow extends Animal{
 
   @Override
   public String getName() {
-    return "Milky Cow";
+    return "Cow";
   }
 
   @Override
