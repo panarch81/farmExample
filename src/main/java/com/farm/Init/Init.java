@@ -14,6 +14,7 @@ import com.farm.utils.AnimalComparator;
 import com.farm.utils.Dictionary;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,8 @@ public class Init {
 
     Set animalsInSpanish = translatedAnimals.entrySet();
     System.out.println(animalsInSpanish);
-
+    Set animalsValueInSpanish = new HashSet<String>(translatedAnimals.values());
+    System.out.println(animalsValueInSpanish);
   }
 
   private static double getMilkPrice(MilkService milkService, String animalTypeName, int liter) {
